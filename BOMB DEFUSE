@@ -1,0 +1,53 @@
+// Desarme da Bomba
+int b1 = 2;
+int b2 = 3;
+int b3 = 4;
+
+int ledV = 8;
+int ledR = 9;
+
+int buzzer = 10;
+
+int etapa = 0;
+
+void setup() {
+  pinMode(b1, INPUT_PULLUP);
+  pinMode(b2, INPUT_PULLUP);
+  pinMode(b3, INPUT_PULLUP);
+
+  pinMode(ledV, OUTPUT);
+  pinMode(ledR, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+  if (etapa == 0 && digitalRead(b2) == LOW) {
+    etapa = 1;
+    delay(200);
+  }
+  else if (etapa == 1 && digitalRead(b1) == LOW) {
+    etapa = 2;
+    delay(200);
+  }
+  else if (etapa == 2 && digitalRead(b3) == LOW) {
+    digitalWrite(ledV, HIGH);
+    tone(buzzer, 1000, 500); // vitória
+    delay(2000);
+    digitalWrite(ledV, LOW);
+    etapa = 0;
+  }
+  // Erro
+  if ((etapa == 0 && digitalRead(b2) == LOW) ||
+      (etapa == 0 && digitalRead(b3) == LOW) ||
+      (etapa == 1 && digitalRead(b1) == LOW) ||
+      (etapa == 1 && digitalRead(b3) == LOW) ||
+      (etapa == 2 && digitalRead(b1) == LOW) ||
+      (etapa == 2 && digitalRead(b2) == LOW)) {
+
+    digitalWrite(ledR, HIGH);
+    tone(buzzer, 300, 500); // erro
+    delay(1000);
+    digitalWrite(ledR, LOW);
+    etapa = 0;
+  }
+}
